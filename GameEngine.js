@@ -1,5 +1,5 @@
 // <--------------EXAMPLE IMPLEMENTAION---------------------->
-//js
+//game.js
 /*
 function init() {
     Game.onUserCreate = function () {
@@ -16,7 +16,7 @@ function init() {
 }
 document.addEventListener("DOMContentLoaded", init);
 */
-//html
+//game.html
 /* 
 <!DOCTYPE html>
 <html>
@@ -61,6 +61,7 @@ var updateMousePos = function (e) {
  * Get the key state of a specific key; if it is held, released, or pressed.
  * - Example - keyState[KEY.BACKSPACE].bHeld
  * */
+// Contains the keystates for all keys.
 var keyState = [];
 var changedKeys = [];
 //Key Codes
