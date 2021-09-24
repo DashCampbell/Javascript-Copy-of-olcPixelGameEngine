@@ -1,6 +1,7 @@
 # Javascript-Copy-of-olcPixelGameEngine
 
-I tried making a javascript game engine that operates similarly to the by the OneLoneCoder olcPixelGameEngine.cpp at https://github.com/OneLoneCoder/olcPixelGameEngine.git
+I tried making a javascript game engine that operates similarly to the olcPixelGameEngine created by Javidx9 at 
+https://github.com/OneLoneCoder/olcPixelGameEngine.git
 
 Basic Features Include:
 * A game loop function.
