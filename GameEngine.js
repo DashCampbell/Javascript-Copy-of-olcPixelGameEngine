@@ -274,4 +274,3 @@ function readFile(fileName) {
     file.send();
     return file.responseText;
 }
-// https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome/13348618#13348618
