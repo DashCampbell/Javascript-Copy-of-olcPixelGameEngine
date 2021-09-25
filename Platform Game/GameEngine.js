@@ -109,7 +109,7 @@ var Game = {
         canvas.id = "screen";
         canvas.width = w;
         canvas.height = h;
-        document.body.appendChild(canvas);
+        document.body.prepend(canvas);
 
         c = canvas.getContext("2d");
         title = document.getElementsByTagName("title")[0].innerText;
