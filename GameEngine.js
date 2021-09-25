@@ -122,7 +122,10 @@ var Game = {
         canvas.id = "screen";
         canvas.width = w * (1 / pixelS);
         canvas.height = h * (1 / pixelS);
-        document.body.appendChild(canvas);
+
+        document.body.prepend(canvas);
+        // uncomment if canvas should appear at the bottom of document
+        // document.body.apppendChild(canvas);
 
         c = canvas.getContext("2d");
         title = document.getElementsByTagName("title")[0].innerText;
