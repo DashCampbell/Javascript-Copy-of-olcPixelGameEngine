@@ -106,11 +106,11 @@ var Game = {
      */
     ConstructCanvas: function (w, h, pixelS = 1) {
         canvas = document.createElement("CANVAS");
-        canvas.style = "width:" + w + "px; height: " + h + "px; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; margin: auto; border: 3px solid black; box-shadow: -2px -2px 10px 10px #ccc;";
+        canvas.style = "width:" + w + "px; height: " + h + "px; left: 0px; right: 0px; margin: auto; border: 3px solid black; box-shadow: -2px -2px 10px 10px #ccc;";
         canvas.id = "screen";
         canvas.width = w * (1 / pixelS);
         canvas.height = h * (1 / pixelS);
-        document.body.appendChild(canvas);
+        document.body.prepend(canvas);
 
         c = canvas.getContext("2d");
         title = document.getElementsByTagName("title")[0].innerText;
