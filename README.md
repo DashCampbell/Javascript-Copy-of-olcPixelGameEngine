@@ -8,4 +8,4 @@ Basic Features Include:
 * Handling keyboard input(key is pressed/held/or released)
 * Render functions.
   
- Example implementaions included in folders.
+ Example implementations included in folders.
