@@ -121,7 +121,7 @@ var Game = {
         for (var i = 0; i < 223; i++)
             keyState.push({ bPressed: false, bReleased: false, bHeld: false });
         document.addEventListener("keydown", function (e) {
-            key = keyState[e.keyCode || e.which];
+            let key = keyState[e.keyCode || e.which];
             if (!key.bHeld) {
                 key.bPressed = true;
                 changedKeys.push(key);

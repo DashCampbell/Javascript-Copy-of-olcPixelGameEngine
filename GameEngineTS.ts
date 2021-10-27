@@ -1,5 +1,7 @@
 /**
  * 
+ * Typescript Version
+ * 
 I tried making a javascript game engine that operates similarly to the olcPixelGameEngine created by Javidx9 at 
 https://github.com/OneLoneCoder/olcPixelGameEngine.git
 
@@ -38,7 +40,7 @@ document.addEventListener("DOMContentLoaded", init);
 <head>
     <title>Title</title>
     <script type="text/javascript" src="game.js"></script>
-    <script type="text/javascript" src="GameEngine.js"></script>
+    <script type="text/javascript" src="GameEngineTS.js"></script>
 </head>
 <body style="padding: 5% 20%;">
 </body>
@@ -46,27 +48,28 @@ document.addEventListener("DOMContentLoaded", init);
 */
 
 //Document Elements
-var title;
-var canvas, c;
+var title: string;
+var canvas: HTMLCanvasElement;
+var c: CanvasRenderingContext2D;
 /**Returns Canvas Width */
-var ScreenWidth = function () { return canvas.width; }
+var ScreenWidth = function (): number { return canvas.width; }
 /**Returns Canvas Height */
-var ScreenHeight = function () { return canvas.height; }
+var ScreenHeight = function (): number { return canvas.height; }
 
 /**Creates a 2D Vector */
-function vec2d(x = 0, y = 0) {
-    this.x = x;
-    this.y = y;
-}
+interface vec2d { x: number, y: number }
+
+// Input type alias
+type BasicInput = { bPressed: boolean, bReleased: boolean, bHeld: boolean };
 
 //Mouse Input
-var mouseState = { bPressed: false, bReleased: false, bHeld: false };
-var mousePos = new vec2d(undefined, undefined);
+var mouseState: BasicInput;
+var mousePos: vec2d;
 /**Returns the X position of the mouse on the canvas. */
-function GetMouseX() { return mousePos.x; }
+function GetMouseX(): number { return mousePos.x; }
 /**Returns the Y position of the mouse on the canvas. */
-function GetMouseY() { return mousePos.y; }
-var updateMousePos = function (e) {
+function GetMouseY(): number { return mousePos.y; }
+var updateMousePos = function (e: MouseEvent): void {
     mousePos.x = e.pageX - canvas.offsetLeft;
     mousePos.y = e.pageY - canvas.offsetTop;
 };
@@ -77,8 +80,9 @@ var updateMousePos = function (e) {
  * - Example - keyState[KEY.BACKSPACE].bHeld
  * */
 // Contains the keystates for all keys.
-var keyState = [];
-var changedKeys = [];
+var keyState: BasicInput[] = [];
+// Keys that were pressed or released during each frame
+var changedKeys: BasicInput[] = [];
 //Key Codes
 const KEY = {
     BACKSPACE: 8, TAB: 9, ENTER: 13, SHIFT: 16,
@@ -110,19 +114,38 @@ const KEY = {
 };
 
 //<------------GAME ENGINE--------------------------------------->
-var Game = {
+var Game: {
     //elapsed time of one frame
-    fElapsedTime: 0,
-    fOldTimeStamp: 0,
+    fElapsedTime: number,
+    fOldTimeStamp: number,
     /**
      *Creates canvas element in body of the document.
      * @param {number} w - Width of Canvas 
      * @param {number} h - Height of Canvas
      * @param {number} pixelS - Pixel Size
      */
-    ConstructCanvas: function (w, h, pixelS = 1) {
+    ConstructCanvas: (w: number, h: number, pixelS: number) => boolean,
+    Start: () => void,
+    //Game Loop
+    run: (fTimeStamp: number) => void,
+
+    //Modify onUserCreate() and update()
+    /**Called at the start of the game.*/
+    onUserCreate: () => boolean,
+    /**
+    * Called every frame.
+    * @param {number} fElapsedTime - Is the elapsed time of the previous frame.
+    * */
+    update: (fElapsedTime: number) => boolean;
+};
+Game = {
+    fElapsedTime: 0,
+    fOldTimeStamp: 0,
+    ConstructCanvas: function (w: number, h: number, pixelS: number = 1): boolean {
         canvas = document.createElement("CANVAS");
-        canvas.style = "width:" + w + "px; height: " + h + "px; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; margin: auto; border: 3px solid black; box-shadow: -2px -2px 10px 10px #ccc;";
+        canvas.setAttribute('style', 'position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; margin: auto; border: 3px solid black; box-shadow: -2px -2px 10px 10px #ccc');
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
         canvas.id = "screen";
         canvas.width = w * (1 / pixelS);
         canvas.height = h * (1 / pixelS);
@@ -133,47 +156,49 @@ var Game = {
 
         c = canvas.getContext("2d");
         title = document.getElementsByTagName("title")[0].innerText;
+
         return true;
     },
-    Start: function () {
+    Start: function (): void {
         //Key Input
         for (var i = 0; i < 223; i++)
             keyState.push({ bPressed: false, bReleased: false, bHeld: false });
-        document.addEventListener("keydown", function (e) {
-            key = keyState[e.keyCode || e.which];
+        document.addEventListener("keydown", function (e: KeyboardEvent) {
+            let key = keyState[e.keyCode || e.which];
             if (!key.bHeld) {
                 key.bPressed = true;
                 changedKeys.push(key);
             }
             key.bHeld = true;
         });
-        document.addEventListener("keyup", function (e) {
-            key = keyState[e.keyCode || e.which];
+        document.addEventListener("keyup", function (e: KeyboardEvent) {
+            let key = keyState[e.keyCode || e.which];
             key.bHeld = false;
             key.bReleased = true;
             changedKeys.push(key);
         });
         //Mouse Input
-        canvas.addEventListener("mousedown", function (e) {
+        mouseState = { bPressed: false, bReleased: false, bHeld: false }
+        mousePos = { x: 0, y: 0 };
+        canvas.addEventListener("mousedown", function (e: MouseEvent) {
             updateMousePos(e);
             if (!mouseState.bHeld)
                 mouseState.bPressed = true;
             mouseState.bHeld = true;
         });
-        canvas.addEventListener("mouseup", function (e) {
+        canvas.addEventListener("mouseup", function (e: MouseEvent) {
             updateMousePos(e);
             mouseState.bHeld = false;
             mouseState.bReleased = true;
         });
-        canvas.addEventListener("mousemove", function (e) {
+        canvas.addEventListener("mousemove", function (e: MouseEvent) {
             updateMousePos(e);
         });
 
         if (this.onUserCreate())
             this.run();
     },
-    //Game Loop
-    run: function (fTimeStamp = 0) {
+    run: function (fTimeStamp: number = 0): void {
         //calculate elapsed time of the frame
         this.fElapsedTime = (fTimeStamp - this.fOldTimeStamp) / 1000;
         this.fOldTimeStamp = fTimeStamp;
@@ -196,12 +221,9 @@ var Game = {
     },
     //Modify onUserCreate() and update()
     /**Called at the start of the game.*/
-    onUserCreate: function () { return true; },
-    /**
-     * Called every frame.
-     * @param {number} fElapsedTime - Is the elapsed time of the previous frame.
-     * */
-    update: function (fElapsedTime) { return true; },
+    onUserCreate: function (): boolean { return true; },
+
+    update: function (fElapsedTime: number): boolean { return true; },
 }
 
 //<------------RENDER METHODS--------------------------------------->
@@ -219,23 +241,23 @@ function Clear(color = "#FFF") {
  * @param {string} color - Text color.
  * @param {number} fontSize - Text size.
  */
-function FillText(x, y, text, color = "#000", fontSize = 20) {
+function FillText(x: number, y: number, text: string, color = "#000", fontSize = 20) {
     c.fillStyle = color;
     c.font = fontSize + "px Arial";
     c.fillText(text, x, y);
 }
-function FillRect(x, y, w, h, color = "#000") {
+function FillRect(x: number, y: number, w: number, h: number, color = "#000") {
     c.fillStyle = color;
     c.fillRect(x, y, w, h);
 }
-function FillCircle(x, y, r, color = "#000") {
+function FillCircle(x: number, y: number, r: number, color = "#000") {
     c.fillStyle = color;
     c.beginPath();
     c.arc(x, y, r, 0, Math.PI * 2, false);
     c.fill();
 }
 /** @param {Array<vec2d>} poly - Array of 2D Vectors */
-function FillPolygon(poly, color = "#000") {
+function FillPolygon(poly: vec2d[], color = "#000") {
     if (poly.length < 3) return;
     c.fillStyle = color;
     c.beginPath();
@@ -245,7 +267,7 @@ function FillPolygon(poly, color = "#000") {
     c.fill();
 }
 //Draw Functions
-function DrawLine(x1, y1, x2, y2, color = "#000", lineWidth = 1) {
+function DrawLine(x1: number, y1: number, x2: number, y2: number, color = "#000", lineWidth = 1) {
     c.strokeStyle = color;
     c.lineWidth = lineWidth;
     c.beginPath();
@@ -253,14 +275,14 @@ function DrawLine(x1, y1, x2, y2, color = "#000", lineWidth = 1) {
     c.lineTo(x2, y2);
     c.stroke();
 }
-function DrawCircle(x, y, r, color = "#000", lineWidth = 1) {
+function DrawCircle(x: number, y: number, r: number, color = "#000", lineWidth = 1) {
     c.strokeStyle = color;
     c.lineWidth = lineWidth;
     c.beginPath();
     c.arc(x, y, r, 0, Math.PI * 2, false);
     c.stroke();
 }
-function DrawRect(x, y, w, h, color = "#000", lineWidth = 1) {
+function DrawRect(x: number, y: number, w: number, h: number, color = "#000", lineWidth = 1) {
     c.strokeStyle = color;
     c.lineWidth = lineWidth;
     c.beginPath();
@@ -272,7 +294,7 @@ function DrawRect(x, y, w, h, color = "#000", lineWidth = 1) {
     c.stroke();
 }
 /** @param {Array<vec2d>} poly - Array of 2D Vectors */
-function DrawPolygon(poly, color = "#000", lineWidth = 1) {
+function DrawPolygon(poly: vec2d[], color = "#000", lineWidth = 1) {
     if (poly.length < 3) return;
     c.lineWidth = lineWidth;
     c.strokeStyle = color;
@@ -287,7 +309,7 @@ function DrawPolygon(poly, color = "#000", lineWidth = 1) {
  * Requires XML
  * @param {string} fileName
  */
-function readFile(fileName) {
+function readFile(fileName: string) {
     var file = new XMLHttpRequest();
     file.open("GET", fileName, false);
     file.send();
