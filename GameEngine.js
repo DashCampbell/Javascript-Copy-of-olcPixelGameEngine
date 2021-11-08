@@ -22,7 +22,7 @@ function init() {
 
         return true;
     }
-    Game.update = function (fElapsedTime) {
+    Game.onUserUpdate = function (fElapsedTime) {
 
         return true;
     }
@@ -181,7 +181,7 @@ var Game = {
         document.getElementsByTagName("title")[0].innerText = title + " - FPS: " + (1 / this.fElapsedTime).toFixed(1);
 
         //modified by user
-        if (this.update(this.fElapsedTime)) {
+        if (this.onUserUpdate(this.fElapsedTime)) {
             //Reset Key States
             changedKeys.forEach(function (v) {
                 if (v.bReleased) v.bReleased = false;
@@ -201,7 +201,7 @@ var Game = {
      * Called every frame.
      * @param {number} fElapsedTime - Is the elapsed time of the previous frame.
      * */
-    update: function (fElapsedTime) { return true; },
+    onUserUpdate: function (fElapsedTime) { return true; },
 }
 
 //<------------RENDER METHODS--------------------------------------->
