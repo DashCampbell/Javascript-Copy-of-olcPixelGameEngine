@@ -24,7 +24,7 @@ function init() {
 
         return true;
     }
-    Game.update = function (fElapsedTime) {
+    Game.onUserUpdate = function (fElapsedTime) {
 
         return true;
     }
@@ -136,7 +136,7 @@ var Game: {
     * Called every frame.
     * @param {number} fElapsedTime - Is the elapsed time of the previous frame.
     * */
-    update: (fElapsedTime: number) => boolean;
+    onUserUpdate: (fElapsedTime: number) => boolean;
 };
 Game = {
     fElapsedTime: 0,
@@ -223,7 +223,7 @@ Game = {
     /**Called at the start of the game.*/
     onUserCreate: function (): boolean { return true; },
 
-    update: function (fElapsedTime: number): boolean { return true; },
+    onUserUpdate: function (fElapsedTime: number): boolean { return true; },
 }
 
 //<------------RENDER METHODS--------------------------------------->
