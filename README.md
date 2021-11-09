@@ -8,4 +8,7 @@ Basic Features Include:
 * Handling keyboard input(key is pressed/held/or released)
 * Render functions.
   
- Example implementations included in folders.
+Requires 3 Files(game.html, game.js, GameEngine.js)
+
+Example using github-pages: https://dashcampbell.github.io/Javascript-Copy-of-olcPixelGameEngine
+* More implementations included in folders.
