@@ -14,5 +14,6 @@ https://github.com/OneLoneCoder/olcPixelGameEngine.git.
 * Modify game.js to fit your game.
 
 ## Example
-* 3D Renderer https://dashcampbell.github.io/Javascript-Copy-of-olcPixelGameEngine
+* 3D Renderer https://dashcampbell.github.io/olcPixelGameEngine-Javascript-Port/
+![](https://github.com/DashCampbell/olcPixelGameEngine-Javascript-Port/blob/master/3DRender.gif)
 * More implementations included in the folders.
